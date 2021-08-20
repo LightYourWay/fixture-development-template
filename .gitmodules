@@ -1,0 +1,3 @@
+[submodule "Core/Lib/gpio-expander-tools"]
+	path = Core/Lib/gpio-expander-tools
+	url = git@github.com:LightYourWay/gpio-expander-tools.git
