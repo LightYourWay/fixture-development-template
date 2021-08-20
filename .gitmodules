@@ -1,3 +1,6 @@
 [submodule "Core/Lib/gpio-expander-tools"]
 	path = Core/Lib/gpio-expander-tools
 	url = git@github.com:LightYourWay/gpio-expander-tools.git
+[submodule "Core/Lib/rs-485-tools"]
+	path = Core/Lib/rs-485-tools
+	url = git@github.com:LightYourWay/rs-485-tools.git
