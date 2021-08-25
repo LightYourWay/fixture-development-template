@@ -27,7 +27,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stm32_spi.h"
+#include "mcp23xxx.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,13 +95,28 @@ int main(void)
   MX_ADC1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-
+  spi SPI_API(&hspi2, SPI2_NSS_GPIO_Port, SPI2_NSS_Pin);
+  mcp23xxx MCP23S08(&SPI_API);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  MCP23S08.writeRegister(0b00000000, 0b00000000);
+  MCP23S08.writeRegister(0b00000101, 0b00001000);
+  int read = MCP23S08.readRegister(0b00000101);
+  MCP23S08.writeRegister(0b00001001, read);
+  HAL_Delay(3000);
+
   while (1)
   {
+    MCP23S08.writeRegister(0b00001001, 0b00001000);
+    HAL_Delay(200);
+    MCP23S08.writeRegister(0b00001001, 0b00000100);
+    HAL_Delay(200);
+    MCP23S08.writeRegister(0b00001001, 0b00000010);
+    HAL_Delay(200);
+    MCP23S08.writeRegister(0b00001001, 0b00000001);
+    HAL_Delay(200);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -139,8 +155,7 @@ void SystemClock_Config(void)
   }
   /** Initializes the CPU, AHB and APB buses clocks
   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
@@ -171,7 +186,7 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
